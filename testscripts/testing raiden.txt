@@ -1,6 +1,20 @@
 Usefull commands
+
+CHANNEL CREATE
+curl -X PUT -H "Content-Type: application/json" -d '{"partner_address": "0x0B85D3E6E064D10A173A21E5654DC9E2920DF2D8","token_address":"0x81935c566632f44dF25B1545352E20aB81eE0CE2","balance": 1000,"settle_timeout": 600}' http://127.0.0.1:5001/api/1/channels
+
+CHANNELS LIST
 curl -X GET http://127.0.0.1:5001/api/1/channels
+CHANNEL DETAILS
+curl -X GET http://127.0.0.1:5001/api/1/channels/0x3c2e44c1bd4a3ea9b460301c26d00527fb7f0699
+
+TRANSFER
 curl -d '{"amount":2}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8
+
+CREATE CONNECTION
+curl -X PUT -H "Content-Type: application/json" -d '{"partner_address":"0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8","token_address":"0x81935c566632f44dF25B1545352E20aB81eE0CE2","balance": 1000,"settle_timeout": 60}' http://127.0.0.1:5001/api/1/channels
+
+
 
 Test echo
 curl -d '{"amount":2,"identifer": 42}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x02f4b6bc65561a792836212ebc54434db0ab759a
