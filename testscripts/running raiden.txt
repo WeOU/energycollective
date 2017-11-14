@@ -8,10 +8,11 @@ parity --chain ropsten --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e2
 Get latest version from git
 git pull origin 
 
-Compilie raiden
+Compile raiden
 source raidenenv/bin/activate
 python setup.py develop
+python setup.py compile_webui
 
 Run raiden with debugging
 raiden --keystore-path  ~/.ethereum/testnet/keystore --logging :DEBUG
-raiden --keystore-path ~/.local/share/io.parity.ethereum/keys/test" --logging :DEBUG
+raiden --keystore-path ~/.local/share/io.parity.ethereum/keys/test --logging :DEBUG
