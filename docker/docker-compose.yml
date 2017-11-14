@@ -1,0 +1,113 @@
+version: "3"
+services:
+
+  # trustlines:
+  #   build: trustlines
+  #   networks:
+  #     - backend
+  #   volumes:
+  #     - ./trustlines/contracts:/contracts
+  #   command: sleep 1000
+
+  # ipfs:
+  #   #image: ipfs/go-ipfs:v0.4.3-rc3
+  #   image: ipfs/go-ipfs:v0.4.12-rc1
+  #   ports:
+  #     - "8081:8080"
+  #     - "4001"
+  #     - "5001"
+  #   environment:
+  #     - IPFS_PATH=/data/ipfs
+  #   volumes:
+  #     #- ./start_ipfs.sh:/usr/local/bin/start_ipfs
+  #     - ./ipfs/staging:/export
+  #     - ./ipfs/data:/data/ipfs
+  #   networks:
+  #     - backend
+
+  raiden:
+    build:
+      context: .
+      dockerfile: raiden_webui.Dockerfile
+      args:
+        RAIDEN_TAG: master
+    ports:
+      - "40001:40001/udp"
+      - "5002:5001"
+    volumes:
+      - ../parityio/keys:/keys
+      - ../parityio/pass.txt:/pass.txt
+    working_dir: /apps/raiden
+    command:
+      --keystore-path /keys/test
+      --address 0x0075703bf50aebe6755844c0c9b28cdb8f730933
+      --password-file /pass.txt
+      --web-ui
+      --rpc
+      --api-address 0.0.0.0:5001
+      --rpccorsdomain http://0.0.0.0:*/*
+      --eth-rpc-endpoint http://parity:8545
+      --eth-client-communication
+      # --nat ext:parity
+    networks:
+      - backend
+
+  parity:
+    image: parity/parity:stable-release
+    ports:
+      # - "8080:8080"
+      - "8180:8180"
+      - "8545:8545"
+      - "8546:8546"
+      - "30303:30303"
+      - "30303:30303/udp"
+    networks:
+      - backend
+    command:
+      --chain ropsten
+      --ui-interface all
+      --ui-no-validation
+      --jsonrpc-interface all
+      --jsonrpc-hosts all
+      --jsonrpc-cors all
+      --jsonrpc-apis all
+      --ws-origins all
+      --ws-interface all
+      --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
+      ui
+      # --unsafe-expose
+    volumes:
+      - ethereum:/root/.local/share/io.parity.ethereum/chains
+      - ../parityio:/backup
+      - /etc/localtime:/etc/localtime:ro
+      - ../parityio/keys:/root/.local/share/io.parity.ethereum/keys
+      # - ../parityio/config.toml:/root/.local/share/io.parity.ethereum/config.toml
+#
+#  geth:
+#    image: ethereum/client-go:latest
+#    ports:
+#      - "8547:8545"
+#      - "30304:30303"
+#      - "3000:3000"
+#    command:
+#      --testnet
+#      --rpc
+#      --fast
+#      --rpcapi eth,net,web3
+#      --rpcport 8545
+#      --rpcaddr "0.0.0.0"
+#      --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
+#    volumes:
+#      - gethereum:/root/.ethereum/testnet/geth/chaindata
+#      - ./geth:/backup
+#      - ./geth/keystore:/root/.ethereum/testnet/keystore
+#      #- ./geth:/root/.ethereum
+#    networks:
+#      - backend
+
+networks:
+  backend:
+
+volumes:
+  ethereum:
+  gethereum:
