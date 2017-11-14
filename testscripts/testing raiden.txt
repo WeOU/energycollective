@@ -1,0 +1,11 @@
+Usefull commands
+curl -X GET http://127.0.0.1:5001/api/1/channels
+curl -d '{"amount":2}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8
+
+Test echo
+curl -d '{"amount":2,"identifer": 42}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x02f4b6bc65561a792836212ebc54434db0ab759a
+
+
+Git
+Checkout latest version
+git pull origin 

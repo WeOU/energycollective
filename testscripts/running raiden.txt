@@ -1,20 +1,13 @@
+Running geth
 geth --testnet --fast --rpc --rpcapi eth,net,web3 --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303" --rpccorsdomain "http://localhost:5001"
 geth --testnet --light --rpc --rpcapi eth,net,web3 --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303" --rpccorsdomain "http://localhost:5001"
 
+Get latest version from git
+git pull origin 
 
+Compilie raiden
 source raidenenv/bin/activate
 python setup.py develop
 
+Run raiden with debugging
 raiden --keystore-path  ~/.ethereum/testnet/keystore --logging :DEBUG
-
-Usefull commands
-curl -X GET http://127.0.0.1:5001/api/1/channels
-curl -d '{"amount":2}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8
-
-Test echo
-curl -d '{"amount":2,"identifer": 42}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x02f4b6bc65561a792836212ebc54434db0ab759a
-
-
-Git
-Checkout latest version
-git pull origin 
