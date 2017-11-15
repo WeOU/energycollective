@@ -38,9 +38,9 @@ ARG RAIDEN_TAG
 ## Install Raiden from git repo
 RUN git clone https://github.com/raiden-network/raiden.git /apps/raiden \
  && cd /apps/raiden \
- && git checkout $RAIDEN_TAG
+ && git checkout ${RAIDEN_TAG}
 
- 
+
 WORKDIR /apps/raiden
 
 COPY settings.py /apps/raiden/raiden/
