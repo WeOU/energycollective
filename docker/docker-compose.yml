@@ -12,6 +12,8 @@ services:
     volumes:
       - ${PARITY_DIR}/keys:/keys
       - ${PARITY_DIR}/pass.txt:/pass.txt
+      - ${RAIDEN_DIR}/data1:/raiden_data
+      - ${RAIDEN_DIR}/raiden1.txt:/logfile.txt
     working_dir: /apps/raiden
     command:
       --keystore-path /keys/test
@@ -19,42 +21,51 @@ services:
       --password-file /pass.txt
       --web-ui
       --rpc
-      --api-address 0.0.0.0:5001
-      --rpccorsdomain http://0.0.0.0:*/*
       --eth-rpc-endpoint http://parity:8545
       --eth-client-communication
       --logging :DEBUG
+      --listen-address 0.0.0.0:40001
+      --rpccorsdomain http://localhost:*/*,raiden2:*/*
+      --sync-check
+      --api-address 0.0.0.0:5001
+      --datadir /raiden_data
+      --eth-client-communication
+      --nat ext:81.161.138.108:40001
+      --logfile /logfile.txt
+#      --rpccorsdomain http://0.0.0.0:*/*
       # --nat ext:parity
-    networks:
-      - backend
+    links:
+      - parity
+    # networks:
+    #   - backend
 
-  raiden2:
-    build:
-      context: .
-      dockerfile: raiden_webui.Dockerfile
-      args:
-        RAIDEN_TAG: ${RAIDEN_VERSION}
-    ports:
-      - "40002:40001/udp"
-      - "5003:5001"
-    volumes:
-      - ${PARITY_DIR}/keys:/keys
-      - ${PARITY_DIR}/pass.txt:/pass.txt
-    working_dir: /apps/raiden
-    command:
-      --keystore-path /keys/test
-      --address ${ADDRESS2}
-      --password-file /pass.txt
-      --web-ui
-      --rpc
-      --api-address 0.0.0.0:5001
-      --rpccorsdomain http://0.0.0.0:*/*
-      --eth-rpc-endpoint http://parity:8545
-      --eth-client-communication
-      --logging :DEBUG
-      # --nat ext:parity
-    networks:
-      - backend
+  # raiden2:
+  #   build:
+  #     context: .
+  #     dockerfile: raiden_webui.Dockerfile
+  #     args:
+  #       RAIDEN_TAG: ${RAIDEN_VERSION}
+  #   ports:
+  #     - "40002:40001/udp"
+  #     - "5003:5001"
+  #   volumes:
+  #     - ${PARITY_DIR}/keys:/keys
+  #     - ${PARITY_DIR}/pass.txt:/pass.txt
+  #   working_dir: /apps/raiden
+  #   command:
+  #     --keystore-path /keys/test
+  #     --address ${ADDRESS2}
+  #     --password-file /pass.txt
+  #     --web-ui
+  #     --rpc
+  #     --api-address 0.0.0.0:5001
+  #     --rpccorsdomain http://0.0.0.0:*/*
+  #     --eth-rpc-endpoint http://parity:8545
+  #     --eth-client-communication
+  #     --logging :DEBUG
+  #     # --nat ext:parity
+  #   networks:
+  #     - backend
 
 
   parity:
@@ -66,9 +77,10 @@ services:
       - "8546:8546"
       - "30303:30303"
       - "30303:30303/udp"
-    networks:
-      - backend
+    # networks:
+    #   - backend
     command:
+      --warp
       --chain ropsten
       --ui-interface all
       --ui-no-validation
@@ -136,8 +148,8 @@ services:
   #   networks:
   #     - backend
 
-networks:
-  backend:
+# networks:
+#   backend:
 
 volumes:
   ethereum:
