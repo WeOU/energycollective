@@ -1,11 +1,12 @@
 version: "3"
 services:
   raiden1:
-    build:
-      context: .
-      dockerfile: raiden_webui.Dockerfile
-      args:
-        RAIDEN_TAG: ${RAIDEN_VERSION}
+    image: piredtu/raiden
+    # build:
+    #   context: .
+    #   dockerfile: raiden_webui.Dockerfile
+    #   args:
+    #     RAIDEN_TAG: ${RAIDEN_VERSION}
     ports:
       - "40002:40002/udp"
       - "5002:5001"
@@ -41,11 +42,12 @@ services:
      - backend
 
   raiden2:
-    build:
-      context: .
-      dockerfile: raiden_webui.Dockerfile
-      args:
-        RAIDEN_TAG: ${RAIDEN_VERSION}
+    image: piredtu/raiden
+    # build:
+    #   context: .
+    #   dockerfile: raiden_webui.Dockerfile
+    #   args:
+    #     RAIDEN_TAG: ${RAIDEN_VERSION}
     ports:
       - "40003:40003/udp"
       - "5003:5001"
