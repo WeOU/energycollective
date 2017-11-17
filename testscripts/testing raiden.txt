@@ -11,6 +11,11 @@ curl -X GET http://127.0.0.1:5001/api/1/channels/0x3c2e44c1bd4a3ea9b460301c26d00
 TRANSFER
 curl -d '{"amount":2}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x0f114a1e9db192502e7856309cc899952b3db1ed/0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8
 
+
+curl -d '{"amount":2}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/047d59928b6480b21473fd3ed0b1ee20ab81ee0ce2/0x0b4ae03434f74
+curl -d '{"amount":1}' -H "Content-Type: application/json" -X POST http://localhost:5001/api/1/transfers/0x81935c566632f44df25b1545352e20ab81ee0ce2/0x0075703bf50aebe6755844c0c9b28cdb8f730933
+
+
 CREATE CONNECTION
 curl -X PUT -H "Content-Type: application/json" -d '{"partner_address":"0x0b85d3e6e064d10a173a21e5654dc9e2920df2d8","token_address":"0x81935c566632f44dF25B1545352E20aB81eE0CE2","balance": 1000,"settle_timeout": 60}' http://127.0.0.1:5001/api/1/channels
 
