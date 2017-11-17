@@ -7,13 +7,54 @@ services:
       args:
         RAIDEN_TAG: ${RAIDEN_VERSION}
     ports:
-      - "40001:40001/udp"
+      - "40002:40002/udp"
       - "5002:5001"
     volumes:
       - ${PARITY_DIR}/keys:/keys
       - ${PARITY_DIR}/pass.txt:/pass.txt
       - ${RAIDEN_DIR}/data1:/raiden_data
       - ${RAIDEN_DIR}/raiden1.txt:/logfile.txt
+      - ./settings.py:/app/raiden/raiden/settings.py
+    working_dir: /apps/raiden
+    command:
+      --keystore-path /keys/test
+      --address ${ADDRESS2}
+      --password-file /pass.txt
+      --web-ui
+      --rpc
+      --eth-rpc-endpoint http://parity:8545
+      --eth-client-communication
+      --logging :DEBUG
+      --sync-check
+      --datadir /raiden_data
+      --eth-client-communication
+      --logfile /logfile.txt
+      --api-address 0.0.0.0:5001
+      --rpccorsdomain http://0.0.0.0:*/*
+      --listen-address 0.0.0.0:40002
+      --rpccorsdomain http://localhost:*/*
+      #--rpccorsdomain http://localhost:*/*,raiden2:*/*
+      #--listen-address 0.0.0.0:40002
+      #--nat upnp
+      # --nat ext:parity
+    networks:
+     - backend
+
+  raiden2:
+    build:
+      context: .
+      dockerfile: raiden_webui.Dockerfile
+      args:
+        RAIDEN_TAG: ${RAIDEN_VERSION}
+    ports:
+      - "40003:40003/udp"
+      - "5003:5001"
+    volumes:
+      - ${PARITY_DIR}/keys:/keys
+      - ${PARITY_DIR}/pass.txt:/pass.txt
+      - ${RAIDEN_DIR}/data2:/raiden_data
+      - ${RAIDEN_DIR}/raiden2.txt:/logfile.txt
+      - ./settings.py:/app/raiden/raiden/settings.py
     working_dir: /apps/raiden
     command:
       --keystore-path /keys/test
@@ -24,49 +65,20 @@ services:
       --eth-rpc-endpoint http://parity:8545
       --eth-client-communication
       --logging :DEBUG
-      --listen-address 0.0.0.0:40001
-      --rpccorsdomain http://localhost:*/*,raiden2:*/*
       --sync-check
-      --api-address 0.0.0.0:5001
       --datadir /raiden_data
       --eth-client-communication
-      --nat ext:81.161.138.108:40001
       --logfile /logfile.txt
-#      --rpccorsdomain http://0.0.0.0:*/*
+      --api-address 0.0.0.0:5001
+      --rpccorsdomain http://0.0.0.0:*/*
+      --listen-address 0.0.0.0:40003
+      --rpccorsdomain http://localhost:*/*
+      #--rpccorsdomain http://localhost:*/*,raiden2:*/*
+      #--listen-address 0.0.0.0:40002
+      #--nat upnp
       # --nat ext:parity
-    links:
-      - parity
-    # networks:
-    #   - backend
-
-  # raiden2:
-  #   build:
-  #     context: .
-  #     dockerfile: raiden_webui.Dockerfile
-  #     args:
-  #       RAIDEN_TAG: ${RAIDEN_VERSION}
-  #   ports:
-  #     - "40002:40001/udp"
-  #     - "5003:5001"
-  #   volumes:
-  #     - ${PARITY_DIR}/keys:/keys
-  #     - ${PARITY_DIR}/pass.txt:/pass.txt
-  #   working_dir: /apps/raiden
-  #   command:
-  #     --keystore-path /keys/test
-  #     --address ${ADDRESS2}
-  #     --password-file /pass.txt
-  #     --web-ui
-  #     --rpc
-  #     --api-address 0.0.0.0:5001
-  #     --rpccorsdomain http://0.0.0.0:*/*
-  #     --eth-rpc-endpoint http://parity:8545
-  #     --eth-client-communication
-  #     --logging :DEBUG
-  #     # --nat ext:parity
-  #   networks:
-  #     - backend
-
+    networks:
+     - backend
 
   parity:
     image: parity/parity:${PARITY_VERSION}
@@ -77,8 +89,8 @@ services:
       - "8546:8546"
       - "30303:30303"
       - "30303:30303/udp"
-    # networks:
-    #   - backend
+    networks:
+      - backend
     command:
       --warp
       --chain ropsten
@@ -90,14 +102,18 @@ services:
       --jsonrpc-apis all
       --ws-origins all
       --ws-interface all
+      --log-file /parity/log.txt
+      --light
       --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
       ui
       # --unsafe-expose
+
     volumes:
       - ethereum:/root/.local/share/io.parity.ethereum/chains
       - ${PARITY_DIR}:/backup
       - /etc/localtime:/etc/localtime:ro
       - ${PARITY_DIR}/keys:/root/.local/share/io.parity.ethereum/keys
+      - ${PARITY_DIR}/log.txt:/parity/log.txt
       # - ../parityio/config.toml:/root/.local/share/io.parity.ethereum/config.toml
 #
 #  geth:
@@ -148,8 +164,8 @@ services:
   #   networks:
   #     - backend
 
-# networks:
-#   backend:
+networks:
+  backend:
 
 volumes:
   ethereum:
